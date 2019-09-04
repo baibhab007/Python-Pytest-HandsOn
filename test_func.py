@@ -1,25 +1,25 @@
-import func
+from func1 import studentDB
 import pytest
-import sys
-@pytest.mark.number
-def test_add():
-    assert func.add(5,6) == 11
-    assert func.add(9) == 13
 
-@pytest.mark.number
-def test_mult():
-    assert func.mult(3,4) == 12
-    assert func.mult(6) == 24
+db=None
+def setup_module(module):
+    print('setup')
+    global db
+    db = studentDB()
+    db.connect('data.json')
 
-@pytest.mark.string
-def test_add_string():
-    assert func.add('Hello','World') == 'HelloWorld'
-    print('--------------------')
+def teardown_module(module):
+    print('teardown')
+    db.close()
 
-@pytest.mark.skip(reason="no run")
-def test_add_string1():
-    assert func.add('Bye','World') == 'HelloWorld'
+def test_scott_data():
+    scott_data=db.get_data('Scott')
+    assert scott_data['id']==1
+    assert scott_data['name']=='Scott'
+    assert scott_data['result']=='pass'
 
-@pytest.mark.skipif(sys.version_info > (3, 3),reason="do not run")
-def test_add_string2():
-    assert func.add('Bye','World') == 'ByeWorld'
+def test_mark_data():
+    mark_data=db.get_data('Mark')
+    assert mark_data['id']==2
+    assert mark_data['name']=='Mark'
+    assert mark_data['result']=='fail'
